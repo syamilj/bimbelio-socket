@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model NotificationQueue {
+  id     String                  @id @default(cuid())
+  status NotificationQueueStatus @default(PENDING)
+
+  // Notification data
+  userId      String?
+  title       String
+  content     String
+  description String?
+  type        NotificationType
+  category    NotificationCategory
+  priority    NotificationPriority @default(NORMAL)
+
+  isBroadcast Boolean
+
+  isPopUp Boolean
+
+  // Related resource IDs for navigation
+  relatedResourceId   String?
+  relatedResourceType NotificationRelatedType?
+
+  whatsApp String?
+  email    String?
+
+  actionUrl String? // URL to navigate when notification is clicked
+  metadata  Json? // Additional data as needed
+
+  // Response tracking
+  runAt         DateTime
+  sentAt        DateTime?
+  failedAt      DateTime?
+  failureReason String?
+  retryCount    Int       @default(0)
+  maxRetries    Int       @default(3)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum NotificationQueueStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+  UNSUBSCRIBED
+}
+
+enum NotificationRelatedType {
+  COURSE
+  LIVE_CLASS
+  TRYOUT
+}
+
+enum NotificationCategory {
+  ORDER
+  SUBSCRIPTION
+  COURSE
+  LIVE_CLASS
+  TRYOUT
+  MESSAGE
+  PAYMENT
+  SYSTEM
+  PROMOTION
+  ACCOUNT
+  OTHER
+}
+
+enum NotificationType {
+  // Order/Transaction related
+  ORDER_CONFIRMATION
+  ORDER_SHIPPED
+  ORDER_DELIVERED
+  PAYMENT_SUCCESSFUL
+  PAYMENT_FAILED
+  PAYMENT_REMINDER
+  REFUND_PROCESSED
+
+  // Subscription related
+  SUBSCRIPTION_ACTIVATED
+  SUBSCRIPTION_RENEWED
+  SUBSCRIPTION_EXPIRING
+  SUBSCRIPTION_EXPIRED
+  SUBSCRIPTION_CANCELED
+  INSTALLMENT_REMINDER
+  INSTALLMENT_DUE
+  INSTALLMENT_OVERDUE
+
+  // Course related
+  COURSE_ENROLLED
+  COURSE_PROGRESS
+  COURSE_COMPLETED
+  NEW_COURSE_AVAILABLE
+  COURSE_UPDATE
+
+  // Live class related
+  LIVECLASS_SCHEDULED
+  LIVECLASS_REMINDER
+  LIVECLASS_STARTING
+  LIVECLASS_ENDED
+  LIVECLASS_REGISTRATION_CONFIRMED
+
+  // Tryout related
+  TRYOUT_STARTED
+  TRYOUT_COMPLETED
+  TRYOUT_RESULTS
+  TRYOUT_AVAILABLE
+
+  // Message/Chat related
+  NEW_MESSAGE
+  MESSAGE_REPLY
+
+  // System/Promo related
+  SYSTEM_ALERT
+  PROMOTION
+  SPECIAL_OFFER
+  ANNOUNCEMENT
+
+  // Account related
+  ACCOUNT_VERIFICATION
+  PASSWORD_CHANGED
+  LOGIN_ATTEMPT
+  ACCOUNT_UPDATED
+
+  // Other
+  GENERIC
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
