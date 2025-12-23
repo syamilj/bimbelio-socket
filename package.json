@@ -7,7 +7,8 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "start": "nodemon ./dist/index.js"
   },
   "keywords": [],
   "author": "",
