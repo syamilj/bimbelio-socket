@@ -65,10 +65,10 @@ export const _post = async (req: Request, res: Response): ReturnType => {
     const body = req.body as z.infer<typeof Schema>;
 
     console.log(body);
-    // if (body.runAt) {
-    //   console.log("new Date runAt : ", new Date(body.runAt));
-    // }
-    // console.log("new Date : ", new Date());
+    if (body.runAt) {
+      console.log("new Date runAt : ", new Date(body.runAt));
+    }
+    console.log("new Date : ", new Date());
 
     checkZodSchema(Schema, body);
 
