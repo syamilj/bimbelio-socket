@@ -2,7 +2,7 @@ import express from "express";
 import { prisma } from "./utils/db";
 import http from "http";
 import { Server } from "socket.io";
-import { createAdapter } from "socket.io-redis";
+import { createAdapter } from "@socket.io/redis-adapter";
 import { createClient } from "redis";
 
 import cors from "cors";
