@@ -4,6 +4,9 @@ export const env = {
   FE_API_URL: process.env.FE_API_URL,
   BE_API_URL: process.env.BE_API_URL,
   CRM_API_URL: process.env.CRM_API_URL,
+  REDIS_HOST: process.env.REDIS_HOST,
+  REDIS_PORT: process.env.REDIS_PORT,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
 };
 
 if (!env.NODE_ENV) {

@@ -2,11 +2,15 @@ import express from "express";
 import { prisma } from "./utils/db";
 import http from "http";
 import { Server } from "socket.io";
+import { createAdapter } from "socket.io-redis";
+import { createClient } from "redis";
+
 import cors from "cors";
 import { jobManager } from "./utils/redisJob";
 import { sendNotification } from "./service/notification/sendNotification";
 import { activeUserManager } from "./utils/redisUser";
 import Routes from "./_routes/_core";
+import { env } from "./env";
 
 const allowedOrigins = [
   "https://www.bimbelio.com",
@@ -35,6 +39,27 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
+
+// ✅ Redis adapter untuk PM2 cluster
+(async () => {
+  const pubClient = createClient({
+    socket: {
+      host: env.REDIS_HOST || "localhost",
+      port: parseInt(env.REDIS_PORT || "6379"),
+    },
+    password: env.REDIS_PASSWORD || undefined,
+  });
+
+  const subClient = pubClient.duplicate();
+  await Promise.all([pubClient.connect(), subClient.connect()]);
+
+  io.adapter(createAdapter(pubClient as any, subClient as any));
+  console.log("[SOCKET.IO] Redis adapter initialized");
+})().catch((err) => {
+  console.error("[SOCKET.IO] Failed to initialize Redis adapter:", err);
+  process.exit(1);
+});
+
 app.use("/notification", Routes.NotificationRouter);
 
 io.on("connection", (socket) => {
