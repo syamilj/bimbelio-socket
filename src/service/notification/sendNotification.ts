@@ -96,8 +96,19 @@ export const sendNotification = async (
         text += `\n📌 Kategori: *${data.category}*`;
         text += `\n📋 Tipe: ${data.type}`;
 
-        if (data.actionUrl) {
+        if (
+          data.actionUrl &&
+          data.actionUrl.length > 0 &&
+          data.actionUrl.startsWith("/")
+        ) {
           text += `\n🔗 Buka: ${env.FE_API_URL}${data.actionUrl}`;
+        }
+        if (
+          data.actionUrl &&
+          data.actionUrl.length > 0 &&
+          data.actionUrl.startsWith("http")
+        ) {
+          text += `\n🔗 Buka: ${data.actionUrl}`;
         }
         const isSuccess = await crm.sendRich({
           phoneNumber: data.whatsApp!,
