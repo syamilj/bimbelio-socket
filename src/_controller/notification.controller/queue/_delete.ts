@@ -26,6 +26,8 @@ export const _delete = async (req: Request, res: Response) => {
       where: { id: notifId },
     });
 
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     console.log(
       `[${new Date().toISOString()}] [CANCEL] Notifikasi '${notifId}' dibatalkan`
     );

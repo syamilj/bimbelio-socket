@@ -38,10 +38,10 @@ export const response = (
   return res.status(status).json({
     status,
     message,
-    data,
     page,
     total_pages,
     total_data,
+    data,
   });
 };
 
