@@ -65,9 +65,9 @@ app.use("/notification", Routes.NotificationRouter);
 io.on("connection", (socket) => {
   console.log(`[SOCKET.IO] Client connected: ${socket.id}`);
 
-  socket.on("user:auth", async (data: { userId: string }) => {
-    await activeUserManager.setUserActive(data.userId, socket.id);
-  });
+  // socket.on("user:auth", async (data: { userId: string }) => {
+  //   await activeUserManager.setUserActive(data.userId, socket.id);
+  // });
 
   socket.on("notification:test", (data: { message: string }) => {
     try {
